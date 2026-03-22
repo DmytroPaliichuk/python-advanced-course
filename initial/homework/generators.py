@@ -33,4 +33,6 @@ from typing import Generator
 
 def generate_numbers(n: int) -> Generator[int, None, None]:
     # TODO: implement generator logic
-    ...
+    for i in range(n + 1):
+        if i % 5 == 0 and i % 7 == 0:
+            yield i
