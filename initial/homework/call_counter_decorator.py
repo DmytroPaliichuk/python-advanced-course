@@ -48,4 +48,12 @@ from typing import Callable
 
 def call_counter(func: Callable) -> Callable:
     # TODO: implement decorator using local variable `calls` and expose count via `.calls`
-    ...
+    calls = 0
+
+    def wrapper(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        wrapper.calls = calls
+        return func(*args, **kwargs)
+    
+    return wrapper
