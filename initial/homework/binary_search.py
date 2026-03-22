@@ -37,4 +37,16 @@
 
 def binary_search(data: list[int], target: int) -> int:
     # TODO: implement binary search
-    ...
+    first_idx = 0
+    last_idx = len(data) - 1
+
+    while first_idx <= last_idx:
+        mid_idx = (first_idx + last_idx) // 2
+        if data[mid_idx] == target:
+            return mid_idx
+        elif data[mid_idx] < target:
+            first_idx = mid_idx + 1
+        else:
+            last_idx = mid_idx - 1
+            
+    return -1
