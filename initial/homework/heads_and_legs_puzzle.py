@@ -37,4 +37,12 @@
 
 def solve_heads_and_legs(num_heads: int, num_legs: int) -> tuple[int, int]:
     # TODO: implement solution
-    ...
+    chicken_legs = 2
+    rabbit_legs = 4
+
+    for chickens in range(num_heads + 1):
+        rabbits = num_heads - chickens
+        if chickens * chicken_legs + rabbits * rabbit_legs == num_legs:
+            return chickens, rabbits
+    return -1, -1
+
