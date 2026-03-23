@@ -55,5 +55,5 @@ def call_counter(func: Callable) -> Callable:
         calls += 1
         wrapper.calls = calls
         return func(*args, **kwargs)
-    
+
     return wrapper

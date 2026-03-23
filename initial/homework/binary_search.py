@@ -48,5 +48,5 @@ def binary_search(data: list[int], target: int) -> int:
             first_idx = mid_idx + 1
         else:
             last_idx = mid_idx - 1
-            
+
     return -1

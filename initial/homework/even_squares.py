@@ -36,4 +36,3 @@
 def even_squares(numbers: list[int]) -> list[int]:
     # TODO: implement using map() and filter()
     return list(map(lambda x: x**2, filter(lambda x: x % 2 == 0, numbers)))
-    

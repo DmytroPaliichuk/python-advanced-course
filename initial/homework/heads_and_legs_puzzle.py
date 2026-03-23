@@ -45,4 +45,3 @@ def solve_heads_and_legs(num_heads: int, num_legs: int) -> tuple[int, int]:
         if chickens * chicken_legs + rabbits * rabbit_legs == num_legs:
             return chickens, rabbits
     return -1, -1
-
