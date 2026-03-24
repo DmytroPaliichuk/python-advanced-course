@@ -36,7 +36,8 @@
 
 
 def binary_search(data: list[int], target: int) -> int:
-    # TODO: implement binary search
+    # O(log n) - because we divide the search space in half each time
+    # O(1) - because we only use a few variables
     first_idx = 0
     last_idx = len(data) - 1
 
