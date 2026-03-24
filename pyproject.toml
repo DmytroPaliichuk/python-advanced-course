@@ -5,6 +5,22 @@ requires-python = ">=3.12"
 authors = [
     { name = "Svitlana Sumets" }
 ]
+dependencies = [
+    "dask==2026.1.2",
+    "httpx==0.28.1",
+    "mypy==1.19.1",
+    "numpy==2.3.5",
+    "pandas==3.0.1",
+    "pre-commit>=4.5.1",
+    "psutil==7.1.3",
+    "pyarrow==23.0.1",
+    "pympler==1.1",
+    "pytest==9.0.1",
+    "pytest-asyncio==1.3.0",
+    "pytest-mock==3.15.1",
+    "requests==2.32.5",
+    "ruff==0.15.2",
+]
 
 [tool.ruff]
 target-version = "py312"
