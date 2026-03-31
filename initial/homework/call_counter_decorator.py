@@ -32,8 +32,8 @@
 
 Приклад:
     @call_counter
-        def add(a, b):
-            return a + b
+    def add(a, b):
+        return a + b
 
     >>> add(1, 2)
     3

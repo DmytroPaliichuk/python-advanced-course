@@ -105,7 +105,3 @@ class EventAggregator:  # <- Залиш назву незмінною
         payload = self.build_payload(merged)
 
         return payload
-
-
-a = EventAggregator('s3-eu-west-1-bucket', 'events')
-print(a.run())
