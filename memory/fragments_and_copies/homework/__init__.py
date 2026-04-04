@@ -1,0 +1,1 @@
+from memory.fragments_and_copies.homework import fake_boto3
