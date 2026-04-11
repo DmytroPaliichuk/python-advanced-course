@@ -73,7 +73,7 @@ def memory_profile(
             start_time = time.perf_counter()
 
             try:
-                return f(*args, **kwargs)
+                result = f(*args, **kwargs)
             finally:
                 current, peak = tracemalloc.get_traced_memory()
                 elapsed = time.perf_counter() - start_time
@@ -103,6 +103,8 @@ def memory_profile(
                     net_diff=net_diff,
                     top_stats=filtered_stats[: max(0, top_n)],
                 )
+
+            return result
 
         return wrapper
 
