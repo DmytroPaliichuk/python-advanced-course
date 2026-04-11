@@ -103,8 +103,7 @@ class CopyOnWriteArray:
         Видаляє елемент.
         Перед операцією може знадобитися відʼєднати власний буфер.
         """
-        if self._storage.refcount > 1:
-            self._storage = Storage(self._storage.data.copy())
+        self._ensure_unique()
         del self._storage.data[index]
 
     def insert(self, index: int, value: Any) -> None:
@@ -112,8 +111,7 @@ class CopyOnWriteArray:
         Вставляє новий елемент за індексом.
         При спільному буфері створює власну копію перед модифікацією.
         """
-        if self._storage.refcount > 1:
-            self._storage = Storage(self._storage.data.copy())
+        self._ensure_unique()
         self._storage.data.insert(index, value)
 
     def append(self, value: Any) -> None:
@@ -121,8 +119,7 @@ class CopyOnWriteArray:
         Додає елемент у кінець масиву.
         Викликає відʼєднання буфера за потреби.
         """
-        if self._storage.refcount > 1:
-            self._storage = Storage(self._storage.data.copy())
+        self._ensure_unique()
         self._storage.data.append(value)
 
     def to_list(self) -> list[Any]:
@@ -226,10 +223,10 @@ def test_insert_2():
 
 if __name__ == '__main__':
     print('Self Checks:')
-    # test_copy_on_write_array()
-    # test_copy_on_write_array_2()
-    # test_copy_on_write_array_3()
-    # test_copy_on_write_array_4()
+    test_copy_on_write_array()
+    test_copy_on_write_array_2()
+    test_copy_on_write_array_3()
+    test_copy_on_write_array_4()
 
     # test_copy_list()
     # test_copy_list_2()
