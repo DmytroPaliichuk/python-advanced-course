@@ -118,11 +118,13 @@ class MeasurementsAggregator:
             <station>;<temperature>
         """
         for line in stream:
-            station, temperature = line.split(';')
+            station, temperature_str = line.split(';')
+            temperature = float(temperature_str)
+
             if station not in self.stations:
-                self.stations[station] = StationStats.create(float(temperature))
+                self.stations[station] = StationStats.create(temperature)
             else:
-                self.stations[station].add(float(temperature))
+                self.stations[station].add(temperature)
 
     def render_sorted(self) -> dict[str, str]:
         """
