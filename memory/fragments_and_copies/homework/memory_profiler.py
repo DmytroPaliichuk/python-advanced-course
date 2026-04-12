@@ -129,11 +129,11 @@ def _print_report(
 ) -> None:
     print(f'Function: {name}', file=out)
     print(f'Elapsed time: {elapsed:.6f} seconds', file=out)
-    print(f'RSS before: {_bytes_to_kib(rss_before):.2f} KiB', file=out)
-    print(f'RSS after: {_bytes_to_kib(rss_after):.2f} KiB', file=out)
+    print(f'RSS before: {_bytes_to_kib(rss_before):.2f} KiB ({_bytes_to_mib(rss_before):.2f} MiB)', file=out)
+    print(f'RSS after: {_bytes_to_kib(rss_after):.2f} KiB ({_bytes_to_mib(rss_after):.2f} MiB)', file=out)
     print(f'RSS delta: {_bytes_to_kib(rss_after - rss_before):+.2f} KiB', file=out)
-    print(f'Current trace memory usage: {_bytes_to_kib(current):.2f} KiB', file=out)
-    print(f'Peak memory usage: {_bytes_to_kib(peak):.2f} KiB', file=out)
+    print(f'Current trace memory usage: {_bytes_to_kib(current):.2f} KiB ({_bytes_to_mib(current):.2f} MiB)', file=out)
+    print(f'Peak memory usage: {_bytes_to_kib(peak):.2f} KiB ({_bytes_to_mib(peak):.2f} MiB)', file=out)
     print(f'Total positive diff: {_format_size(total_positive_diff, sign=True)}', file=out)
     print(f'Total negative diff: {_format_size(total_negative_diff, sign=True)}', file=out)
     print(f'Net diff: {_format_size(net_diff, sign=True)}', file=out)
@@ -176,6 +176,10 @@ def _is_interesting_stat(stat: tracemalloc.StatisticDiff) -> bool:
 
 def _bytes_to_kib(n: int) -> float:
     return n / 1024
+
+
+def _bytes_to_mib(n: int) -> float:
+    return n / 1024 / 1024
 
 
 def _format_size(size_bytes: int, sign: bool = False) -> str:

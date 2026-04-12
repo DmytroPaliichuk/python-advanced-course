@@ -22,8 +22,9 @@
 import copy
 import json
 
+from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import Any, Generator
 
 from memory.fragments_and_copies.homework import fake_boto3
 from memory.fragments_and_copies.homework.memory_profiler import memory_profile
@@ -111,8 +112,8 @@ class EventAggregatorOriginal:  # <- Залиш назву незмінною
         return payload
 
 
-### Optimized class ###
-class EventAggregator:  # <- Залиш назву незмінною
+### Semi-optimized class ###
+class EventAggregatorSemiOptimized:  # <- Залиш назву незмінною
     __slots__ = ('bucket', 'prefix', 's3')
 
     def __init__(self, bucket: str, prefix: str):  # <- Init метод має залишитися таким
@@ -155,6 +156,76 @@ class EventAggregator:  # <- Залиш назву незмінною
         return [{'user': user, 'count': len(events), 'events': events} for user, events in merged.items()]
 
 
+### Optimized class ###
+@dataclass(slots=True)
+class NormalizedEven:
+    user_id: str
+    event: str
+    value: float | None
+    timestamp: float
+    extra: dict[str, Any] | None
+
+
+@dataclass(slots=True)
+class PayloadUserEvents:
+    user: str
+    count: int
+    events: list[NormalizedEven]
+
+
+class EventAggregator:  # <- Залиш назву незмінною
+    def __init__(self, bucket: str, prefix: str):  # <- Init метод має залишитися таким
+        self.bucket = bucket
+        self.prefix = prefix
+
+        self.s3 = fake_boto3.client('s3')
+
+    def _iter_raw_events(self) -> Generator[dict]:
+        objects = self.s3.list_objects_v2(
+            Bucket=self.bucket,
+            Prefix=self.prefix,
+        )['Contents']
+
+        for obj in objects:
+            raw = self.s3.get_object(
+                Bucket=self.bucket,
+                Key=obj['Key'],
+            )['Body'].read()
+
+            for event in json.loads(raw):
+                yield event
+
+    def _iter_normalized_even(self) -> Generator[NormalizedEven]:
+        for event in self._iter_raw_events():
+            yield NormalizedEven(
+                event['user_id'],
+                event['event'],
+                event.get('value'),
+                datetime.fromisoformat(event['timestamp']).timestamp(),
+                None,
+            )
+
+    @staticmethod
+    def _iter_payload(users: dict[str, list[NormalizedEven]]) -> Generator[PayloadUserEvents]:
+        for user, events in users.items():
+            yield PayloadUserEvents(
+                user,
+                len(events),
+                events,
+            )
+
+    @memory_profile
+    def run(self) -> list[PayloadUserEvents]:  # <- метод run має бути наявним у класі, вміст можна змінювати за потреби
+        event_by_user: dict[str, list[NormalizedEven]] = {}
+        for norm_event in self._iter_normalized_even():
+            if norm_event.user_id not in event_by_user:
+                event_by_user[norm_event.user_id] = [norm_event]
+            else:
+                event_by_user[norm_event.user_id].append(norm_event)
+
+        return list(self._iter_payload(event_by_user))
+
+
 ### Tests ###
 if __name__ == '__main__':
     _bucket = 'fake-bucket'
@@ -163,6 +234,10 @@ if __name__ == '__main__':
     print('Original class:')
     original = EventAggregatorOriginal(_bucket, _prefix)
     _ = original.run()
+    print('-' * 100)
+    print('Semi-optimized class:')
+    semi_optimized = EventAggregatorSemiOptimized(_bucket, _prefix)
+    _ = semi_optimized.run()
     print('-' * 100)
     print('Optimized class:')
     optimized = EventAggregator(_bucket, _prefix)
