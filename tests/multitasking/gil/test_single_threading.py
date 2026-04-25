@@ -1,6 +1,6 @@
 import unittest
 
-from multitasking.gil.homework_answers.single_threading import get_task_order
+from multitasking.gil.homework.single_threading import get_task_order
 
 
 class TestSingleThreadedCPU(unittest.TestCase):
