@@ -42,9 +42,10 @@
 
 from __future__ import annotations
 
+from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TextIO
+from typing import Deque, TextIO
 
 from memory.memory_anatomy.homework.log_window_analyzer.generator import LogFileGenerator
 
@@ -76,8 +77,8 @@ class LogWindowAnalyzer:
         """
         Відкрити файл та передати файловий потік у метод _process_stream.
         """
-        # TODO: implement solution
-        ...
+        with open(path, mode='r', encoding='utf-8') as file:
+            return self._process_stream(stream=file)
 
     def _process_stream(self, stream: TextIO) -> WindowResult:
         """
@@ -94,8 +95,30 @@ class LogWindowAnalyzer:
             - не створювати зайві списки;
             - мінімізувати кількість алокацій.
         """
-        # TODO: implement solution
-        ...
+        queue: Deque[int] = deque(maxlen=self._window_size)
+        processed_rows = 0
+        max_window_sum = 0
+        current_window_sum = 0
+
+        for line in stream:
+            if line.isspace():
+                continue
+
+            processed_rows += 1
+
+            duration = self._parse_duration(line=line)
+            current_window_sum += duration
+            queue.append(duration)
+
+            if len(queue) == self._window_size:
+                max_window_sum = max(max_window_sum, current_window_sum)
+                current_window_sum -= queue.popleft()
+
+        return WindowResult(
+            max_window_sum=max_window_sum,
+            window_size=self._window_size,
+            processed_rows=processed_rows,
+        )
 
     @staticmethod
     def _parse_duration(line: str) -> int:
@@ -106,8 +129,8 @@ class LogWindowAnalyzer:
         Заборонено:
             - використовувати split(), щоб уникнути зайвих алокацій.
         """
-        # TODO: implement solution
-        ...
+        idx = line.rfind(';')
+        return int(line[idx + 1 :])
 
 
 def main() -> None:

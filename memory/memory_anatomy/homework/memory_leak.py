@@ -43,5 +43,15 @@
 
 
 def simulate_memory_leak(memory1: int, memory2: int) -> list[int]:
-    # TODO: implement solution
-    ...
+    process_time_seconds = 1
+    while True:
+        if memory1 >= memory2:
+            if memory1 < process_time_seconds:
+                break
+            memory1 -= process_time_seconds
+        else:
+            if memory2 < process_time_seconds:
+                break
+            memory2 -= process_time_seconds
+        process_time_seconds += 1
+    return [process_time_seconds, memory1, memory2]

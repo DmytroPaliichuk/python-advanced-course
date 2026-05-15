@@ -42,16 +42,36 @@
         - базові принципи роботи heap у Python (arenas/pools/blocks) у максимально спрощеній формі.
 """
 
+from typing import Optional
+
 
 class Allocator:
     def __init__(self, n: int):
-        # TODO: implement solution
-        ...
+        self._memory: list[Optional[int]] = [None] * n
 
     def allocate(self, size: int, alloc_id: int) -> int:
-        # TODO: implement solution
-        ...
+        free_space = 0
+
+        for i, value in enumerate(self._memory):
+            if value is None:
+                if free_space == 0:
+                    first_free_idx = i
+                free_space += 1
+                if free_space == size:
+                    for j in range(first_free_idx, first_free_idx + size):
+                        self._memory[j] = alloc_id
+                    return first_free_idx
+            else:
+                free_space = 0
+
+        return -1
 
     def free_memory(self, alloc_id: int) -> int:
-        # TODO: implement solution
-        ...
+        free_space = 0
+
+        for i in range(len(self._memory)):
+            if self._memory[i] == alloc_id:
+                self._memory[i] = None
+                free_space += 1
+
+        return free_space
