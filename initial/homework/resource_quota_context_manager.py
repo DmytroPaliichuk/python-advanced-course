@@ -56,7 +56,7 @@ class _QuotaContext:
         self.amount = amount
 
     def __enter__(self) -> int:
-        # TODO: reserve resource or raise ValueError
+        # TODO: reserve resource or raise ValueError if not enough resources
         if self.amount + self.quota.used > self.quota.total_limit:
             raise ValueError('Not enough resources')
         self.quota.used += self.amount
@@ -68,5 +68,5 @@ class _QuotaContext:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ):
-        # TODO: release resource
+        # TODO: release resource even if there is an exception
         self.quota.used -= self.amount
