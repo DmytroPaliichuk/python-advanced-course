@@ -7,8 +7,8 @@ def call_counter(func: Callable) -> Callable:
     def wrapper(*args, **kwargs) -> Any:
         nonlocal calls
         calls += 1
-        wrapper.calls = calls  # type: ignore[attr-defined]
+        wrapper.calls = calls
         return func(*args, **kwargs)
 
-    wrapper.calls = calls  # type: ignore[attr-defined]
+    wrapper.calls = calls
     return wrapper

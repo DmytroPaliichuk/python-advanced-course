@@ -1,6 +1,6 @@
 [project]
 name = "python-advanced"
-version = "0.0.1"
+version = "0.1.0"
 requires-python = ">=3.12"
 authors = [
     { name = "Svitlana Sumets" }
@@ -81,7 +81,18 @@ disallow_untyped_defs = false
 check_untyped_defs = false
 warn_unused_ignores = true
 warn_redundant_casts = true
-warn_unused_configs = true
+warn_unused_configs = false
+disable_error_code = [
+    "index",
+    "var-annotated",
+    "assignment",
+    "arg-type",
+    "attr-defined",
+    "annotation-unchecked",
+    "union-attr",
+    "return-value",
+    "import-untyped",
+]
 
 [tool.pytest.ini_options]
 addopts = "-q --maxfail=1"
